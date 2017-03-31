@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration</title>
+    <meta charset="utf-8" />
+    <script language="Javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+
+  
+
+            <!--//document.getElementById('name').innerHTML = document.getElementById("name").value;
+            //document.getElementById('familyid').innerHTML = document.getElementById("familyid").value;
+            //document.getElementById('emailid').innerHTML = document.getElementById("emailid").value;
+            //document.getElementById('gender').innerHTML = document.getElementById("gender").value;
+            //document.getElementById('age').innerHTML = document.getElementById("age").value;
+            //document.getElementById('password').innerHTML = document.getElementById("password").value;
+            //document.getElementById('confpassword').innerHTML = document.getElementById("confpassword").value;-->
+
+
+        
+    
+
+</head>
+<body>
+    <form id="register-form" method="post">
+        <h1> Sign up </h1>
+        <p>
+            <label>Your Name or Username</label>
+            <input id="name" type="text" />
+        </p>
+        <p>
+            <label>Your Family Id</label>
+            <input id="familyid" required="required" type="text" placeholder="eg. Raja12" />
+        </p>
+        <p>
+            <label> Your email</label>
+            <input id="emailid" required="required" type="email" placeholder="eg. raja10@gmail.com" />
+        </p>
+        <p>
+            Your gender: <input type="radio" id="gender" name="gender" value="male" checked>Male
+                        <input type="radio" id="gender" name="gender" value="female">Female<br>
+        </p>
+        <p>
+            Your age:<select id="age" required="required">
+                <option value="1-10years">1-10years</option>
+                <option value="11-20years">11-20years</option>
+                <option value="21-30years">21-30years</option>
+                <option value="30-40years">31-40years</option>
+                <option value="41-50years">41-50years</option>
+                <option value="51-60years">51-60years</option>
+                <option value="61-70years">61-70years</option>
+                <option value="71-80years">71-80years</option>
+                <option value="81-90years">81-90years</option>
+                <option value="91-100years">91-100years</option>
+                <option value="greater100">Greater than 100years</option>
+            </select>
+        </p>
+        <p>
+            <label>Your password </label>
+            <input id="password" required="required" type="password" placeholder="eg. X8df!90EO" />
+        </p>
+        <p>
+            <label>Please confirm your password </label>
+            <input id="confpassword" required="required" type="password" placeholder="eg. X8df!90EO" />
+        </p>
+    </form>
+  
+        <!--<input type="submit" value="Sign up" onclick="savedata()" />-->
+ 
+    <input type="submit" value="Sign up" id="btn-submit" />
+        Already a member ?
+        <a href="http://localhost:59498/LoginView.html" class="to_register"> Go and log in </a><br>
+    <script>
+        $('document').ready(function () {
+            /* validation */
+            $("#register-form").validate({
+                rules:
+                {
+                    name: {
+                        required: true,
+                        minlength: 15
+                    },
+                    familyid: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 15
+                    },
+                    emailid: {
+                        required: true,
+                        email: true
+                    },
+                    gender: {
+                        required: true,
+                    },
+                    age: {
+                        required: true,
+                    },
+                    password: {
+                        required: true,
+
+                    },
+
+                    confpassword: {
+                        required: true,
+                        equalTo: '#password'
+                    },
+
+                },
+                messages:
+                {
+                    name: "Enter a Valid Username",
+                    familyid: "Enter a valid Familyid",
+                    emailid: "Enter a Valid Emailid",
+
+                    password: {
+                        required: "Provide a Password",
+                        minlength: "Password Needs To Be Minimum of 8 Characters"
+                    },
+
+                    confpassword: {
+                        required: "Retype Your Password",
+                        equalTo: "Password Mismatch! Retype"
+                    }
+                },
+                submitHandler: submitForm
+            });
+            /* validation */
+
+            /* form submit */
+            function submitForm() {
+                var data = $("#register-form").serialize();
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'register.php',
+                    data: data,
+                    beforeSend: function () {
+                        $("#error").fadeOut();
+                        $("#btn-submit").html('<span class="glyphicon glyphicon-transfer"></span> &nbsp; sending ...');
+                    },
+                    success: function (data) {
+                        if (data == 1) {
+
+                            $("#error").fadeIn(1000, function () {
+
+
+                                $("#error").html('<div class="alert alert-danger"> <span class="glyphicon glyphicon-info-sign"></span> &nbsp; Sorry email already taken !</div>');
+
+                                $("#btn-submit").html('<span class="glyphicon glyphicon-log-in"></span> &nbsp; Create Account');
+
+                            });
+
+                        }
+                        else if (data == "registered") {
+
+                            $("#btn-submit").html('Signing Up');
+                            setTimeout('$(".form-signin").fadeOut(500, function(){ $(".signin-form").load("successreg.php"); }); ', 5000);
+
+                        }
+                        else {
+
+                            $("#error").fadeIn(1000, function () {
+
+                                $("#error").html('<div class="alert alert-danger"><span class="glyphicon glyphicon-info-sign"></span> &nbsp; ' + data + ' !</div>');
+
+                                $("#btn-submit").html('<span class="glyphicon glyphicon-log-in"></span> &nbsp; Create Account');
+
+                            });
+
+                        }
+                    }
+                });
+                return false;
+            }
+            /* form submit */
+
+        });
+
+        </script>
+   
+       
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
